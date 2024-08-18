@@ -1,0 +1,101 @@
+================================ 73 ===============================
+public void setZeroes(int[][] matrix) {
+        // without create new matrix
+        int n = matrix.length;
+        int m = matrix[0].length;
+        Set<List<Integer>> set = new HashSet<>();
+        // in which (i,j) have 0 store this i, j
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (matrix[i][j] == 0) {
+                    List<Integer> temp = new ArrayList<>();
+                    temp.add(i);
+                    temp.add(j);
+                    set.add(temp);
+                }
+            }
+        }
+        // loop run in all i,j that have in set
+        for (List<Integer> d : set) {
+            fillZero(matrix, d.get(0), d.get(1), n, m);
+        }
+    }
+
+    public void fillZero(int[][] matrix, int row, int col, int n, int m) {
+        for (int i = row; i >= 0; i--) {
+            matrix[i][col] = 0;
+        }
+        for (int i = row; i < n; i++) {
+            matrix[i][col] = 0;
+        }
+        for (int j = col; j >= 0; j--) {
+            matrix[row][j] = 0;
+        }
+        for (int j = col; j < m; j++) {
+            matrix[row][j] = 0;
+        }
+    }
+======================================= 118 =================================
+public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> ans = new ArrayList<>();
+
+        for (int i = 1; i <= numRows; i++) {
+            List<Integer> temp = new ArrayList<>();
+            for (int j = 1; j <= i; j++) {
+                temp.add(generateValue(i, j));
+            }
+            ans.add(temp);
+        }
+
+        return ans;
+    }
+
+    public int generateValue(int r, int c) {
+        r = r - 1;
+        c = c - 1;
+        int res = 1;
+
+        for (int i = 0; i < c; i++) {
+            res *= r - i;
+            res /= i + 1;
+        }
+        return res;
+    }
+================================ 31 ============================
+public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        // find the small value from right
+        int i = n - 2;
+        for (; i >= 0; i--) {
+            if (nums[i] < nums[i + 1]) {
+                break;
+            }
+        }
+        // if find so swap with the first greater value from this value
+        if (i >= 0) {
+            int j = n - 1;
+            for (; j > i; j--) {
+                if (nums[i] < nums[j]) {
+                    break;
+                }
+            }
+            // swap
+            swap(nums, i, j);
+        }
+        // reverse array from i+1 to n-1
+        reverse(nums, i + 1, n - 1);
+    }
+
+    public void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    public void reverse(int[] nums, int i, int j) {
+        while (i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
