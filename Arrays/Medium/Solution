@@ -99,3 +99,82 @@ public void nextPermutation(int[] nums) {
             j--;
         }
     }
+================================== 48 ===========================
+public void rotate(int[][] matrix) {
+        // swap diagonal line right value
+        int n = matrix.length;
+        int m = matrix[0].length;
+
+        for(int i=0; i < n; i++) {
+           for(int j=i+1; j < m; j++) {
+                swap1(matrix, i, j);
+           }
+        }
+        // per row reverse
+        for(int i=0; i < n; i++) {
+            reverse(matrix, i);
+        }
+    }
+    public void reverse(int[][] m, int row) {
+        int p1 = 0, p2 = m.length-1;
+        while(p1 < p2) {
+            swap2(m, row, p1, p2);
+            p1++;
+            p2--;
+        }
+    }
+    public void swap2(int[][] m, int row, int p1, int p2) {
+        int temp = m[row][p1];
+        m[row][p1] = m[row][p2];
+        m[row][p2] = temp;
+    }
+    public void swap1(int[][] m, int row, int col) {
+        int temp = m[row][col];
+        m[row][col] = m[col][row];
+        m[col][row] = temp;
+    } 
+================================================= 56 ==================================
+public int[][] merge(int[][] intervals) {
+        // sort based on 0th index [1, 4], [0, 4] for this example return false result
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        // store in an arrylist 
+        ArrayList<int[]> list = new ArrayList<>();
+        list.add(intervals[0]);
+
+        for(int i=1; i < intervals.length; i++) {
+            int m = list.size()-1;
+            // this condition true means have a intervals
+            if(list.get(m)[1] >= intervals[i][0]) {
+                int max = Math.max(list.get(m)[1], intervals[i][1]);
+                list.get(m)[1] = max;
+            }   else {
+                list.add(intervals[i]);
+            }
+        }
+
+        int[][] ans = new int[list.size()][2];
+        list.toArray(ans);
+        return ans;
+    }
+=============================================== 287 ==================================
+// not most optimal part solve using binary search
+public int findDuplicate(int[] nums) {
+        int low = 1, high = nums.length - 1;
+
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+
+            int cnt = 0;
+            for (int val : nums) {
+                if (val <= mid)
+                    cnt++;
+            }
+
+            if (cnt > mid)
+                high = mid;
+            else
+                low = mid + 1;
+        }
+
+        return low;
+    }
