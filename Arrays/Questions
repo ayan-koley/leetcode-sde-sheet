@@ -1,3 +1,4 @@
+=======================================> Array <================================
 ----------------------- Easy ----------------------
 53. Maximum Subarray
 121. Best Time to Buy and Sell Stock
@@ -9,3 +10,11 @@
 48. Rotate Image
 56. Merge Intervals
 287. Find the Duplicate Number
+
+=======================================> Binary Tree <================================
+----------------------- Easy ----------------------
+94. Binary Tree Inorder Traversal
+144. Binary Tree Preorder Traversal
+145. Binary Tree Postorder Traversal
+94. Morris Inorder
+    Morris preorder(code 360)
