@@ -19,5 +19,7 @@
 94. Morris Inorder
     Morris preorder(code 360)
 
-Left View of Binary Tree
-Bottom View of Binary Tree
+    Left View of Binary Tree
+    Bottom View of Binary Tree
+    Top View of Binary Tree
+987. Vertical Order Traversal of a Binary Tree
