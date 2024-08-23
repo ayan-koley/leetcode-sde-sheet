@@ -95,4 +95,55 @@ public static List < Integer > getPreOrderTraversal(TreeNode root) {
             }
         }
         return ans;
+ -------------------------------------- Left View of Binary Tree --------------------------------------
+ ArrayList<Integer> leftView(Node root)
+    {
+        ArrayList<Integer> list = new ArrayList<>();
+        leftViewUtil(root, 0, list);
+        return list;
+    }
+    void leftViewUtil(Node root, int level, ArrayList<Integer> ans) {
+        if(root == null) return;
+        
+        if(level == ans.size()) {
+            ans.add(root.data);
+        }
+        
+        leftViewUtil(root.left, level+1, ans);
+        leftViewUtil(root.right, level+1, ans);
+    }
+ -------------------------------------- Bottom View of Binary Tree --------------------------------------
+    class Pair {
+        Node node;
+        int key;
+        public Pair(Node node, int key) {
+            this.node = node;
+            this.key = key;
+        }
+    }
+    public ArrayList <Integer> bottomView(Node root)
+    {
+        Queue<Pair> q = new LinkedList<>();
+        q.add(new Pair(root, 0));
+        Map<Integer, Integer> inMap = new TreeMap<>();
+        
+        while(!q.isEmpty()) {
+            Pair p = q.remove();
+            
+            inMap.put(p.key, p.node.data);
+            if(p.node.left != null) {
+                q.add(new Pair(p.node.left, p.key -1));
+            }
+            if(p.node.right != null) {
+                q.add(new Pair(p.node.right, p.key + 1));
+            }
+        }
+        
+        ArrayList<Integer> ans = new ArrayList<>();
+        for(Map.Entry<Integer, Integer> entry : inMap.entrySet()) {
+            ans.add(entry.getValue());
+        }
+        
+        
+        return ans;
     }
