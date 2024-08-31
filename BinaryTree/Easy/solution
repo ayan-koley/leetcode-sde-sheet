@@ -284,3 +284,333 @@ public static List < Integer > getPreOrderTraversal(TreeNode root) {
         }
         return anslist;
     }
+---------------------------------------------- Root To Paths ------------------------------------------------- 
+public static ArrayList<ArrayList<Integer>> Paths(Node root) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        rootToLeaf(root, new ArrayList<>(), ans);
+        
+        return ans;
+    } 
+    public static void rootToLeaf(Node root, ArrayList<Integer> al, ArrayList<ArrayList<Integer>> ans) {
+        if(root == null) {
+            return;
+        }
+        
+        al.add(root.data);
+        
+        if(root.left == null && root.right == null) {
+            
+            ans.add(new ArrayList<>(al));
+            return;
+        }
+        
+        rootToLeaf(root.left, new ArrayList<>(al), ans);
+        rootToLeaf(root.right, new ArrayList<>(al), ans);
+    }
+---------------------------------------------- 662 ------------------------------------------------- 
+class Pair {
+        TreeNode node;
+        int idx;
+        public Pair(TreeNode node, int idx) {
+            this.node = node;
+            this.idx = idx;
+        }
+    }
+    public int widthOfBinaryTree(TreeNode root) {
+        if(root == null) return 0;
+
+        int maxWidth = 0;
+        Queue<Pair> q = new LinkedList<>();
+        q.add(new Pair(root, 0));
+
+        while(!q.isEmpty()) {
+            int size = q.size();
+
+            int minPosition = q.peek().idx;
+            int first = 0, last = 0;
+
+            for(int i=0; i < size; i++) {
+                Pair p = q.poll();
+
+                int pos = p.idx - minPosition;
+                if(i == 0) first = pos;
+                if(i == size-1) last = pos;
+
+                if(p.node.left != null) {
+                    q.add(new Pair(p.node.left, 2 * p.idx + 1));
+                }
+                 if(p.node.right != null) {
+                    q.add(new Pair(p.node.right, 2 * p.idx + 2));
+                }
+            }
+
+            maxWidth = Math.max(maxWidth, last - first + 1);
+        }
+
+        return maxWidth;
+    }
+---------------------------------------------- 543 ------------------------------------------------- 
+    class Diam {
+        int diam;
+        int ht;
+        public Diam(int diam, int ht) {
+            this.diam = diam;
+            this.ht = ht;
+        }
+    }
+    public int diameterOfBinaryTree(TreeNode root) {
+        if(root == null) return 0;
+        return diameter(root).diam;
+    }
+    public Diam diameter(TreeNode root) {
+        if(root == null) return new Diam(0, 0);
+
+        Diam left = diameter(root.left);
+        Diam right = diameter(root.right);
+
+        int selfDiam = left.ht + right.ht;
+        int ht = Math.max(left.ht, right.ht) + 1;
+
+        return new Diam(Math.max(selfDiam, Math.max(left.diam, right.diam)), ht);
+    }
+---------------------------------------------- 110 ------------------------------------------------- 
+public boolean isBalanced(TreeNode root) {
+       return check(root) == -1 ? false : true;
+    }
+    public int check(TreeNode root) {
+        if(root == null) return 0;
+
+        int lh = check(root.left);
+        int rh = check(root.right);
+        if(lh == -1 || rh == -1) return -1;
+        if(Math.abs(lh - rh) > 1) return -1;
+        return Math.max(lh, rh) + 1;
+    }
+---------------------------------------------- 236 ------------------------------------------------- 
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null || root == p || root == q) {
+            return root;
+        }
+
+        TreeNode leftNode = lowestCommonAncestor(root.left, p, q);
+        TreeNode rightNode = lowestCommonAncestor(root.right, p, q);
+
+        if(leftNode == null) {
+            return rightNode;
+        }
+        if(rightNode == null) {
+            return leftNode;
+        }
+        
+        return root;
+    }
+---------------------------------------- 100 ---------------------------------------------
+public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        }
+        if (p == null || q == null || p.val != q.val) {
+            return false;
+        }
+        boolean left = isSameTree(p.left, q.left);
+        boolean right = isSameTree(p.right, q.right);
+
+        return left && right;
+    }
+---------------------------------------- 103 ---------------------------------------------
+ public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> anslist = new ArrayList<>();
+        if(root == null) return anslist;
+        
+        // init reverse with false because reverse second line not first line
+        boolean reverse = false;
+        List<Integer> list = new ArrayList<>();
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        q.add(null);
+
+        while(!q.isEmpty()) {
+            TreeNode node = q.remove();
+
+            if(node == null) {
+                if(reverse) {
+                    List<Integer> temp = new ArrayList<>();
+                    reverse(temp, list);
+                    anslist.add(new ArrayList<>(temp));
+                }   else {
+                    anslist.add(new ArrayList<>(list));
+                }
+                list.clear();
+
+                if(q.isEmpty()) {
+                    break;
+                }   else {
+                    q.add(null);
+                }
+                
+                reverse = !reverse;
+            }   else {
+                list.add(node.val);
+
+                if(node.left != null) {
+                    q.add(node.left);
+                }   
+                if(node.right != null) {
+                    q.add(node.right);
+                }
+            }
+        }
+        return anslist;
+    }
+    public void reverse(List<Integer> temp, List<Integer> list) {
+        for(int i=list.size()-1; i >= 0; i--) {
+            temp.add(list.get(i));
+        } 
+    }
+------------------------------------------- Tree Boundary Traversal ----------------------------
+class Solution {
+    ArrayList<Integer> boundary(Node node) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (node == null) return res; // Return empty list if the tree is empty
+        
+        // Add root node to the result (even if it's a leaf node)
+        res.add(node.data);
+
+        // Add the left boundary excluding leaf nodes
+        addLeft(node.left, res);
+        
+        // Add all leaf nodes from the left and right subtrees
+        addLeaf(node.left, res);
+        addLeaf(node.right, res);
+        
+        // Add the right boundary excluding leaf nodes
+        addRight(node.right, res);
+        
+        return res; // Return the final boundary traversal list
+    }
+
+    // Function to add the left boundary excluding leaf nodes
+    public static void addLeft(Node node, ArrayList<Integer> res) {
+        Node cur = node;
+        while (cur != null) {
+            // Add the current node if it's not a leaf
+            if (!isLeaf(cur)) res.add(cur.data);
+            
+            // Traverse to the next left boundary node
+            if (cur.left != null) cur = cur.left;
+            else cur = cur.right; // If no left child, move to right
+        }
+    }
+
+    // Function to add all leaf nodes
+    public static void addLeaf(Node node, ArrayList<Integer> res) {
+        if (node == null) return; // Return if the node is null
+        if (isLeaf(node)) {
+            res.add(node.data); // Add the node if it's a leaf
+        } else {
+            // Recurse on left and right subtrees
+            addLeaf(node.left, res);
+            addLeaf(node.right, res);
+        }
+    }
+
+    // Function to add the right boundary excluding leaf nodes (added in reverse order)
+    public static void addRight(Node node, ArrayList<Integer> res) {
+        Node cur = node;
+        ArrayList<Integer> temp = new ArrayList<>(); // Temporary list to store right boundary nodes
+        
+        while (cur != null) {
+            // Add the current node if it's not a leaf
+            if (!isLeaf(cur)) temp.add(cur.data);
+            
+            // Traverse to the next right boundary node
+            if (cur.right != null) cur = cur.right;
+            else cur = cur.left; // If no right child, move to left
+        }
+        
+        // Add right boundary nodes in reverse order to maintain boundary order
+        for (int i = temp.size() - 1; i >= 0; i--) {
+            res.add(temp.get(i));
+        }
+    }
+
+    // Utility function to check if a node is a leaf node
+    public static boolean isLeaf(Node node) {
+        return node.left == null && node.right == null;
+    }
+}
+----------------------------------------------- 124 -----------------------------------------
+ public int maxPathSum(TreeNode root) {
+        if(root == null) return 0;
+        int[] maxi = new int[1];
+        maxi[0] = Integer.MIN_VALUE;
+        helper(root, maxi);
+        return maxi[0];
+    }
+    public int helper(TreeNode node, int[] maxi) {
+        if(node == null) return 0;
+
+        // [2,-1] checking max at calling because for this type example
+        // here ans is 2 but in noramaly check ans is 1
+        // so check for also single value
+        int left = Math.max(0, helper(node.left, maxi));
+        int right = Math.max(0, helper(node.right, maxi));
+
+        maxi[0] = Math.max(maxi[0], (node.val + left + right));
+
+        return node.val + Math.max(left, right);
+    }
+------------------------------------------ Mirror Tree ----------------------------------
+void mirror(Node node) {
+        
+        if(node == null) return;
+        
+        convertIntoMirror(node);
+    }
+    private Node convertIntoMirror(Node node) {
+        if(node == null) return null;
+        
+        // swap 
+        Node temp = node.left;
+        node.left = convertIntoMirror(node.right);
+        node.right = convertIntoMirror(temp);
+        
+        return node;
+    }
+------------------------------------------ 101 ------------------------------------
+ public boolean isSymmetric(TreeNode root) {
+        return root == null || isSymetricUtil(root.left, root.right);
+    }
+    public boolean isSymetricUtil(TreeNode left, TreeNode right) {
+        if(left == null && right == null) return true;
+
+        if(left == null || right == null || left.val != right.val) {
+            return false;
+        }
+
+        return isSymetricUtil(left.left, right.right) && 
+               isSymetricUtil(left.right, right.left);
+    }
+------------------------------------------ Children Sum in a Binary Tree ------------------------------------
+public static int isSumProperty(Node root)
+    {
+        if(root == null) return 1;
+        return isSum(root) ? 1 : 0;
+    }
+    public static boolean isSum(Node root) {
+        if(root == null ||( root.left == null && root.right == null)) {
+            return true;
+        }
+        
+        //store left child value
+        int leftval = root.left != null ? root.left.data : 0;
+        // store right child value
+        int rightval = root.right != null ? root.right.data : 0;
+        
+        // check same or not
+        if(root.data == leftval + rightval ) {
+            return isSum(root.left) && isSum(root.right);
+        }
+        
+        return false;
+    }
